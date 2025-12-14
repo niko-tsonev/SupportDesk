@@ -32,10 +32,8 @@ export async function deleteTicket(id) {
 }
 
 export async function getAssignedTickets() {
-  const res = await api.get("/api/tickets");
-  return res.data.filter(
-    (t) => t.status !== 2 && t.assignedToUserId !== null
-  );
+  const res = await api.get("/api/tickets/my-assigned");
+  return res.data;
 }
 
 export async function getClosedTickets() {

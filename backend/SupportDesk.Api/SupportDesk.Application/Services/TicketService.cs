@@ -153,5 +153,36 @@ namespace SupportDesk.Application.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IReadOnlyList<TicketResponseDto>> GetMyAssignedTicketsAsync(string userId)
+        {
+            var tickets = await _context.Tickets
+                .Where(t => t.AssignedToUserId == userId && t.Status != TicketStatus.Closed)
+                .OrderByDescending(t => t.CreatedAt)
+                .Select(t => new TicketResponseDto
+                {
+                    Id = t.Id,
+                    Subject = t.Subject,
+                    CustomerEmail = t.CustomerEmail,
+                    Description = t.Description,
+                    Status = t.Status,
+                    AssignedToUserId = t.AssignedToUserId,
+                    CreatedByUserId = t.CreatedByUserId,
+                    CreatedAt = t.CreatedAt
+                })
+                .ToListAsync();
+
+            foreach (var ticket in tickets.Where(t => t.AssignedToUserId != null))
+            {
+                var user = await _userManager.FindByIdAsync(ticket.AssignedToUserId!);
+                if (user != null)
+                {
+                    ticket.AssignedToUserEmail = user.Email;
+                    ticket.AssignedToUserName = user.UserName;
+                }
+            }
+
+            return tickets;
+        }
     }
 }

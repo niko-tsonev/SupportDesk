@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SupportDesk.Api.Extensions;
 using SupportDesk.Application.DTOs.Tickets;
-using SupportDesk.Domain.Entities;
-using SupportDesk.Infrastructure.Data;
+using SupportDesk.Application.Interfaces;
 
 namespace SupportDesk.Api.Controllers
 {
@@ -12,30 +10,18 @@ namespace SupportDesk.Api.Controllers
     [Route("api/tickets/{ticketId}/replies")]
     public class RepliesController : ControllerBase
     {
-        private readonly SupportDeskDbContext _context;
+        private readonly IReplyService _replyService;
 
-        public RepliesController(SupportDeskDbContext context)
+        public RepliesController(IReplyService replyService)
         {
-            _context = context;
+            _replyService = replyService;
         }
 
         // GET replies
         [HttpGet]
         public async Task<IActionResult> GetReplies(Guid ticketId)
         {
-            var replies = await _context.TicketReplies
-                .Where(r => r.TicketId == ticketId)
-                .OrderBy(r => r.CreatedAt)
-                .Select(r => new
-                {
-                    r.Id,
-                    r.Message,
-                    r.IsInternal,
-                    r.CreatedAt,
-                    r.UserId
-                })
-                .ToListAsync();
-
+            var replies = await _replyService.GetRepliesByTicketIdAsync(ticketId);
             return Ok(replies);
         }
 
@@ -48,16 +34,10 @@ namespace SupportDesk.Api.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var reply = new TicketReply
-            {
-                TicketId = ticketId,
-                UserId = userId,
-                Message = dto.Message,
-                IsInternal = dto.IsInternal
-            };
-
-            _context.TicketReplies.Add(reply);
-            await _context.SaveChangesAsync();
+            var result = await _replyService.AddReplyAsync(ticketId, userId, dto);
+            
+            if (!result)
+                return NotFound("Ticket not found");
 
             return Ok();
         }

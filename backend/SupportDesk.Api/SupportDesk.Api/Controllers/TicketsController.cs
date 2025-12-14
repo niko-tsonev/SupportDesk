@@ -116,5 +116,19 @@ namespace SupportDesk.Api.Controllers
             if (!ok) return Forbid();
             return NoContent();
         }
+
+        // -------------------------------
+        // GET: My Assigned Tickets
+        // -------------------------------
+        [Authorize]
+        [HttpGet("my-assigned")]
+        public async Task<IActionResult> GetMyAssignedTickets()
+        {
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
+            var tickets = await _ticketService.GetMyAssignedTicketsAsync(userId);
+            return Ok(tickets);
+        }
     }
 }

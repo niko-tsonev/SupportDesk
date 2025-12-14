@@ -11,5 +11,6 @@ namespace SupportDesk.Application.Interfaces
         Task<bool> DeleteAsync(Guid id);
         Task<bool> AssignAsync(Guid id, string? userId);
         Task<bool> CloseAsync(Guid id, string? userId, bool isAdmin);
+        Task<IReadOnlyList<TicketResponseDto>> GetMyAssignedTicketsAsync(string userId);
     }
 }
