@@ -9,10 +9,12 @@ namespace SupportDesk.Application.Services
     public class ReplyService : IReplyService
     {
         private readonly SupportDeskDbContext _context;
+        private readonly IEmailService _emailService;
 
-        public ReplyService(SupportDeskDbContext context)
+        public ReplyService(SupportDeskDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         public async Task<IReadOnlyList<ReplyResponseDto>> GetRepliesByTicketIdAsync(Guid ticketId, bool isAuthenticated)
@@ -43,9 +45,9 @@ namespace SupportDesk.Application.Services
 
         public async Task<bool> AddReplyAsync(Guid ticketId, string userId, CreateReplyDto dto)
         {
-            // Check if ticket exists
-            var ticketExists = await _context.Tickets.AnyAsync(t => t.Id == ticketId);
-            if (!ticketExists)
+            // Get the ticket
+            var ticket = await _context.Tickets.FindAsync(ticketId);
+            if (ticket == null)
                 return false;
 
             var reply = new TicketReply
@@ -58,6 +60,25 @@ namespace SupportDesk.Application.Services
 
             _context.TicketReplies.Add(reply);
             await _context.SaveChangesAsync();
+
+            // Send email notification if reply is not internal
+            if (!dto.IsInternal)
+            {
+                try
+                {
+                    await _emailService.SendReplyNotificationAsync(
+                        ticket.CustomerEmail,
+                        ticket.Subject,
+                        dto.Message
+                    );
+                }
+                catch (Exception ex)
+                {
+                    // Log the error but don't fail the reply creation
+                    // In production, you should use proper logging
+                    Console.WriteLine($"Failed to send email: {ex.Message}");
+                }
+            }
 
             return true;
         }

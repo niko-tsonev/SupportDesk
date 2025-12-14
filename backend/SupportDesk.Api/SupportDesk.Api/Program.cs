@@ -22,6 +22,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IReplyService, ReplyService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 //DbContext
