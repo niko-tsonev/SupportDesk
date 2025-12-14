@@ -21,7 +21,8 @@ namespace SupportDesk.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetReplies(Guid ticketId)
         {
-            var replies = await _replyService.GetRepliesByTicketIdAsync(ticketId);
+            var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+            var replies = await _replyService.GetRepliesByTicketIdAsync(ticketId, isAuthenticated);
             return Ok(replies);
         }
 

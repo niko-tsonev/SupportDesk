@@ -15,10 +15,18 @@ namespace SupportDesk.Application.Services
             _context = context;
         }
 
-        public async Task<IReadOnlyList<ReplyResponseDto>> GetRepliesByTicketIdAsync(Guid ticketId)
+        public async Task<IReadOnlyList<ReplyResponseDto>> GetRepliesByTicketIdAsync(Guid ticketId, bool isAuthenticated)
         {
-            var replies = await _context.TicketReplies
-                .Where(r => r.TicketId == ticketId)
+            var query = _context.TicketReplies
+                .Where(r => r.TicketId == ticketId);
+
+            // Filter out internal replies if user is not authenticated
+            if (!isAuthenticated)
+            {
+                query = query.Where(r => !r.IsInternal);
+            }
+
+            var replies = await query
                 .OrderBy(r => r.CreatedAt)
                 .Select(r => new ReplyResponseDto
                 {
