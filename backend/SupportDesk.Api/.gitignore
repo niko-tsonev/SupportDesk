@@ -1,0 +1,100 @@
+# .NET / Visual Studio / Rider / common OS ignores
+
+# Build outputs
+bin/
+obj/
+[Bb]uild/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# JetBrains Rider
+.idea/
+*.shelf/
+*.iml
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Logs
+*.log
+logs/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Temp files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.orig
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+TestResults/
+
+# Publish outputs
+publish/
+*.pubxml
+*.publishsettings
+
+# Entity Framework
+# Keep migrations; ignore model cache snapshots if needed
+# Uncomment next line if you don't want to track snapshot (usually you do)
+# *ModelSnapshot.cs
+
+# Secrets and user-specific config
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+
+# ASP.NET scaffolding
+ScaffoldingReadMe.txt
+
+# Node / frontend (if present)
+node_modules/
+.dist/
+.cache/
+
+# Docker
+**/.dockerignore
+**/Dockerfile*
+
+# Python virtual envs (if any tooling uses them)
+.venv/
+venv/
+
+# Azure / other tooling
+.localsettings.json
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# StyleCop / analyzers
+StyleCopReport.xml
+
+# TFM-specific caches
+.artifacts/
+
+# git-merge/patch files
+*.rej
+*.patch

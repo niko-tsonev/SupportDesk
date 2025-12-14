@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Common/">
+    <Project Path="SupportDesk.Domain/SupportDesk.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Data/">
+    <Project Path="SupportDesk.Infrastructure/SupportDesk.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Services/">
+    <Project Path="SupportDesk.Application/SupportDesk.Application.csproj" />
+  </Folder>
+  <Folder Name="/Web/">
+    <Project Path="SupportDesk.Api/SupportDesk.Api.csproj" />
+  </Folder>
+</Solution>
