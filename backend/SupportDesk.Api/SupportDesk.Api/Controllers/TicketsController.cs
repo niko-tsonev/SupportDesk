@@ -37,7 +37,7 @@ namespace SupportDesk.Api.Controllers
         // -------------------------------
         // GET: Details (Public)
         // -------------------------------
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var ticket = await _ticketService.GetByIdAsync(id);

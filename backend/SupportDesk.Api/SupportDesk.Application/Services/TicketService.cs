@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SupportDesk.Application.DTOs.Tickets;
 using SupportDesk.Application.Interfaces;
 using SupportDesk.Domain.Entities;
 using SupportDesk.Domain.Enums;
+using SupportDesk.Domain.Identity;
 using SupportDesk.Infrastructure.Data;
 
 namespace SupportDesk.Application.Services
@@ -10,15 +12,17 @@ namespace SupportDesk.Application.Services
     public class TicketService : ITicketService
     {
         private readonly SupportDeskDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public TicketService(SupportDeskDbContext context)
+        public TicketService(SupportDeskDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IReadOnlyList<TicketResponseDto>> GetAllAsync()
         {
-            return await _context.Tickets
+            var tickets = await _context.Tickets
                 .OrderByDescending(t => t.CreatedAt)
                 .Select(t => new TicketResponseDto
                 {
@@ -32,24 +36,51 @@ namespace SupportDesk.Application.Services
                     CreatedAt = t.CreatedAt
                 })
                 .ToListAsync();
+
+            foreach (var ticket in tickets.Where(t => t.AssignedToUserId != null))
+            {
+                var user = await _userManager.FindByIdAsync(ticket.AssignedToUserId!);
+                if (user != null)
+                {
+                    ticket.AssignedToUserEmail = user.Email;
+                    ticket.AssignedToUserName = user.UserName;
+                }
+            }
+
+            return tickets;
         }
 
         public async Task<TicketResponseDto?> GetByIdAsync(Guid id)
         {
-            return await _context.Tickets
-                .Where(t => t.Id == id)
-                .Select(t => new TicketResponseDto
+            var ticket = await _context.Tickets
+            .Where(t => t.Id == id)
+            .Select(t => new TicketResponseDto
+            {
+                Id = t.Id,
+                Subject = t.Subject,
+                CustomerEmail = t.CustomerEmail,
+                Description = t.Description,
+                Status = t.Status,
+                AssignedToUserId = t.AssignedToUserId,
+                CreatedByUserId = t.CreatedByUserId,
+                CreatedAt = t.CreatedAt
+            })
+            .FirstOrDefaultAsync();
+
+            if (ticket == null)
+                return null;
+            
+            if (ticket.AssignedToUserId != null)
+            {
+                var user = await _userManager.FindByIdAsync(ticket.AssignedToUserId);
+                if (user != null)
                 {
-                    Id = t.Id,
-                    Subject = t.Subject,
-                    CustomerEmail = t.CustomerEmail,
-                    Description = t.Description,
-                    Status = t.Status,
-                    AssignedToUserId = t.AssignedToUserId,
-                    CreatedByUserId = t.CreatedByUserId,
-                    CreatedAt = t.CreatedAt
-                })
-                .FirstOrDefaultAsync();
+                    ticket.AssignedToUserEmail = user.Email;
+                    ticket.AssignedToUserName = user.UserName;
+                }
+            }
+
+            return ticket;
         }
 
         public async Task<Guid?> CreateAsync(string? userId, CreateTicketDto dto)

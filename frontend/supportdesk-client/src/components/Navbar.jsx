@@ -1,18 +1,39 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 
 export default function Navbar() {
+  const { user, logout } = useAuth();
+
   return (
     <header className="bg-primary text-white">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <h1 className="text-lg font-semibold tracking-wide">
+        <Link
+          to="/"
+          className="text-lg font-semibold hover:text-accent"
+        >
           SupportDesk
-        </h1>
+        </Link>
 
-        <nav className="space-x-6 text-sm">
+
+        <nav className="space-x-6 text-sm flex items-center">
           <Link className="hover:text-accent" to="/">Catalog</Link>
-          <Link className="hover:text-accent" to="/dashboard">Dashboard</Link>
-          <Link className="hover:text-accent" to="/history">History</Link>
-          <Link className="hover:text-accent" to="/login">Login</Link>
+
+          {user && (
+            <>
+              <Link className="hover:text-accent" to="/dashboard">Dashboard</Link>
+              <Link className="hover:text-accent" to="/history">History</Link>
+              <button
+                onClick={logout}
+                className="ml-4 bg-secondary px-3 py-1 rounded hover:bg-accent"
+              >
+                Logout
+              </button>
+            </>
+          )}
+
+          {!user && (
+            <Link className="hover:text-accent" to="/login">Login</Link>
+          )}
         </nav>
       </div>
     </header>

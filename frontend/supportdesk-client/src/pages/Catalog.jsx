@@ -23,9 +23,12 @@ export default function Catalog() {
             className="block bg-white rounded-lg shadow hover:shadow-md transition p-5 border-l-4 border-secondary"
           >
             <h3 className="font-medium text-secondary">{t.subject}</h3>
-            <p className="text-sm text-gray-600 mt-1">{t.customerEmail}</p>
-            <p className="text-sm mt-2 text-accent">
-              Status: {t.status}
+            <p className="text-sm text-gray-600">
+              {t.customerEmail}
+            </p>
+            <p className="text-sm text-gray-600">
+              Assigned to:{" "}
+              {t.assignedToUserEmail || "Unassigned"}
             </p>
           </Link>
         ))}

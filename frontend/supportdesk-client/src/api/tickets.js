@@ -30,3 +30,15 @@ export async function closeTicket(id) {
 export async function deleteTicket(id) {
   await api.delete(`/api/tickets/${id}`);
 }
+
+export async function getAssignedTickets() {
+  const res = await api.get("/api/tickets");
+  return res.data.filter(
+    (t) => t.status !== 2 && t.assignedToUserId !== null
+  );
+}
+
+export async function getClosedTickets() {
+  const res = await api.get("/api/tickets");
+  return res.data.filter((t) => t.status === 2);
+}
