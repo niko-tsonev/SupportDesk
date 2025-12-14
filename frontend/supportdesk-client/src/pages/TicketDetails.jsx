@@ -81,13 +81,15 @@ export default function TicketDetails() {
         </div>
 
         <div className="border-t pt-4 mt-4">
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">Description</h2>
-          <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
-            {ticket.description}
-          </p>
+          <h2 className="text-sm font-semibold text-gray-700 mb-3">Description</h2>
+          <div className="p-4 rounded border bg-gray-50 border-gray-200">
+            <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
+              {ticket.description}
+            </p>
+          </div>
         </div>
 
-        <div className="border-t pt-4 mt-4">
+        <div className="pt-4 mt-4">
           <div className="flex items-center gap-2 text-sm">
             <span className="font-semibold text-gray-700">Assigned to:</span>
             <span className={`px-3 py-1 rounded-full text-sm ${
