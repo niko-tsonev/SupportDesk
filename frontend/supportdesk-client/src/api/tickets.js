@@ -23,6 +23,10 @@ export async function assignTicket(id) {
   await api.post(`/api/tickets/${id}/assign`);
 }
 
+export async function unassignTicket(id) {
+  await api.post(`/api/tickets/${id}/unassign`);
+}
+
 export async function closeTicket(id) {
   await api.post(`/api/tickets/${id}/close`);
 }

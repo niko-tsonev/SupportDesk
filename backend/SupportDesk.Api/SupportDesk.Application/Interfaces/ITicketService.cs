@@ -10,6 +10,7 @@ namespace SupportDesk.Application.Interfaces
         Task<bool> UpdateAsync(Guid id, string? userId, bool isAdmin, UpdateTicketDto dto);
         Task<bool> DeleteAsync(Guid id);
         Task<bool> AssignAsync(Guid id, string? userId);
+        Task<bool> UnassignAsync(Guid id, string? userId);
         Task<bool> CloseAsync(Guid id, string? userId, bool isAdmin);
         Task<IReadOnlyList<TicketResponseDto>> GetMyAssignedTicketsAsync(string userId);
     }

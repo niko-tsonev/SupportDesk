@@ -103,6 +103,19 @@ namespace SupportDesk.Api.Controllers
         }
 
         // -------------------------------
+        // POST: Unassign Ticket
+        // -------------------------------
+        [Authorize]
+        [HttpPost("{id}/unassign")]
+        public async Task<IActionResult> Unassign(Guid id)
+        {
+            var userId = User.GetUserId();
+            var ok = await _ticketService.UnassignAsync(id, userId);
+            if (!ok) return Forbid();
+            return NoContent();
+        }
+
+        // -------------------------------
         // POST: Close Ticket
         // -------------------------------
         [Authorize]

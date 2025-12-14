@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { assignTicket, closeTicket, getTicketById, deleteTicket } from "../api/tickets";
+import { assignTicket, unassignTicket, closeTicket, getTicketById, deleteTicket } from "../api/tickets";
 import StatusBadge from "../components/StatusBadge";
 import { useAuth } from "../auth/AuthContext";
 
@@ -110,18 +110,35 @@ export default function TicketDetails() {
           <div className="flex flex-wrap gap-3">
             {user && ticket.status !== 2 && (
               <>
-                <button
-                  onClick={async () => {
-                    await assignTicket(id);
-                    load();
-                  }}
-                  className="bg-secondary text-white px-5 py-2.5 rounded-lg hover:bg-accent transition-colors flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  Assign to me
-                </button>
+                {!ticket.assignedToUserId && (
+                  <button
+                    onClick={async () => {
+                      await assignTicket(id);
+                      load();
+                    }}
+                    className="bg-secondary text-white px-5 py-2.5 rounded-lg hover:bg-accent transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Assign to me
+                  </button>
+                )}
+
+                {ticket.assignedToUserId && (
+                  <button
+                    onClick={async () => {
+                      await unassignTicket(id);
+                      load();
+                    }}
+                    className="bg-orange-600 text-white px-5 py-2.5 rounded-lg hover:bg-orange-700 transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Unassign from me
+                  </button>
+                )}
 
                 <button
                   onClick={async () => {

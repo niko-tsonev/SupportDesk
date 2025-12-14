@@ -140,6 +140,22 @@ namespace SupportDesk.Application.Services
             return true;
         }
 
+        public async Task<bool> UnassignAsync(Guid id, string? userId)
+        {
+            var ticket = await _context.Tickets.FindAsync(id);
+            if (ticket == null)
+                return false;
+
+            // Only allow unassigning if the ticket is assigned to the current user
+            if (ticket.AssignedToUserId != userId)
+                return false;
+
+            ticket.AssignedToUserId = null;
+            ticket.Status = TicketStatus.New;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> CloseAsync(Guid id, string? userId, bool isAdmin)
         {
             var ticket = await _context.Tickets.FindAsync(id);
