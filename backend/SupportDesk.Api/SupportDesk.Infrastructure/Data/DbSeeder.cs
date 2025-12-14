@@ -41,6 +41,14 @@ namespace SupportDesk.Infrastructure.Data
 
         private static async Task SeedUsersAsync(UserManager<AppUser> userManager)
         {
+            // Seed system user used for email-originated tickets
+            await CreateUserIfNotExistsWithId(
+                userManager,
+                id: "EMAIL",
+                email: "system@supportdesk.local",
+                password: "SystemUser123!",
+                role: null);
+
             await CreateUserIfNotExists(
                 userManager,
                 "admin@supportdesk.local",
@@ -79,6 +87,37 @@ namespace SupportDesk.Infrastructure.Data
 
             await userManager.CreateAsync(user, password);
             await userManager.AddToRoleAsync(user, role);
+        }
+
+        private static async Task CreateUserIfNotExistsWithId(
+            UserManager<AppUser> userManager,
+            string id,
+            string email,
+            string password,
+            string? role)
+        {
+            var existing = await userManager.FindByIdAsync(id);
+            if (existing != null)
+                return;
+
+            // Also check by email to avoid duplicates if created previously without fixed Id
+            var byEmail = await userManager.FindByEmailAsync(email);
+            if (byEmail != null)
+                return;
+
+            var user = new AppUser
+            {
+                Id = id,
+                UserName = email,
+                Email = email,
+                EmailConfirmed = true
+            };
+
+            await userManager.CreateAsync(user, password);
+            if (!string.IsNullOrEmpty(role))
+            {
+                await userManager.AddToRoleAsync(user, role);
+            }
         }
 
         private static async Task SeedTicketsAsync(
