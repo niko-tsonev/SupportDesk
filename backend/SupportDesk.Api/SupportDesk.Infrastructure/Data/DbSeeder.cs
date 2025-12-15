@@ -17,9 +17,9 @@ namespace SupportDesk.Infrastructure.Data
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            context.TicketReplies.RemoveRange(context.TicketReplies);
-            context.Tickets.RemoveRange(context.Tickets);
-            await context.SaveChangesAsync();
+            // context.TicketReplies.RemoveRange(context.TicketReplies);
+            // context.Tickets.RemoveRange(context.Tickets);
+            // await context.SaveChangesAsync();
 
             await SeedRolesAsync(roleManager);
             await SeedUsersAsync(userManager);

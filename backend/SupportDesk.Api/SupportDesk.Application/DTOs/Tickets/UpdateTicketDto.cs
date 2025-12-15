@@ -4,5 +4,6 @@
     {
         public string Subject { get; set; } = null!;
         public string Description { get; set; } = null!;
+        public bool IsPriority { get; set; }
     }
 }

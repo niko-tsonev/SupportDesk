@@ -9,6 +9,7 @@ namespace SupportDesk.Application.DTOs.Tickets
         public string CustomerEmail { get; set; } = null!;
         public string Description { get; set; } = null!;
         public TicketStatus Status { get; set; }
+        public bool IsPriority { get; set; }
 
         public string? AssignedToUserEmail { get; set; }
         public string? AssignedToUserName { get; set; }

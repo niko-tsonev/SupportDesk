@@ -31,6 +31,7 @@ namespace SupportDesk.Application.Services
                     CustomerEmail = t.CustomerEmail,
                     Description = t.Description,
                     Status = t.Status,
+                    IsPriority = t.IsPriority,
                     AssignedToUserId = t.AssignedToUserId,
                     CreatedByUserId = t.CreatedByUserId,
                     CreatedAt = t.CreatedAt
@@ -61,6 +62,7 @@ namespace SupportDesk.Application.Services
                 CustomerEmail = t.CustomerEmail,
                 Description = t.Description,
                 Status = t.Status,
+                IsPriority = t.IsPriority,
                 AssignedToUserId = t.AssignedToUserId,
                 CreatedByUserId = t.CreatedByUserId,
                 CreatedAt = t.CreatedAt
@@ -93,6 +95,7 @@ namespace SupportDesk.Application.Services
                 Subject = dto.Subject,
                 CustomerEmail = dto.CustomerEmail,
                 Description = dto.Description,
+                IsPriority = dto.IsPriority,
                 CreatedByUserId = userId,
                 Status = TicketStatus.New
             };
@@ -113,6 +116,7 @@ namespace SupportDesk.Application.Services
 
             ticket.Subject = dto.Subject;
             ticket.Description = dto.Description;
+            ticket.IsPriority = dto.IsPriority;
             await _context.SaveChangesAsync();
             return true;
         }
@@ -182,6 +186,7 @@ namespace SupportDesk.Application.Services
                     CustomerEmail = t.CustomerEmail,
                     Description = t.Description,
                     Status = t.Status,
+                    IsPriority = t.IsPriority,
                     AssignedToUserId = t.AssignedToUserId,
                     CreatedByUserId = t.CreatedByUserId,
                     CreatedAt = t.CreatedAt

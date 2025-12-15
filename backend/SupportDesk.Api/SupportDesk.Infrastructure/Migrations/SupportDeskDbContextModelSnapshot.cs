@@ -9,7 +9,7 @@ using SupportDesk.Infrastructure.Data;
 
 #nullable disable
 
-namespace SupportDesk.Api.Migrations
+namespace SupportDesk.Infrastructure.Migrations
 {
     [DbContext(typeof(SupportDeskDbContext))]
     partial class SupportDeskDbContextModelSnapshot : ModelSnapshot
@@ -156,7 +156,7 @@ namespace SupportDesk.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SupportDesk.Api.Domain.Entities.Ticket", b =>
+            modelBuilder.Entity("SupportDesk.Domain.Entities.Ticket", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -180,6 +180,9 @@ namespace SupportDesk.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsPriority")
+                        .HasColumnType("boolean");
+
                     b.Property<TicketStatus>("Status")
                         .HasColumnType("ticket_status");
 
@@ -196,7 +199,7 @@ namespace SupportDesk.Api.Migrations
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("SupportDesk.Api.Domain.Entities.TicketReply", b =>
+            modelBuilder.Entity("SupportDesk.Domain.Entities.TicketReply", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -228,7 +231,7 @@ namespace SupportDesk.Api.Migrations
                     b.ToTable("TicketReplies");
                 });
 
-            modelBuilder.Entity("SupportDesk.Api.Models.AppUser", b =>
+            modelBuilder.Entity("SupportDesk.Domain.Identity.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -303,7 +306,7 @@ namespace SupportDesk.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SupportDesk.Api.Models.AppUser", null)
+                    b.HasOne("SupportDesk.Domain.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -312,7 +315,7 @@ namespace SupportDesk.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SupportDesk.Api.Models.AppUser", null)
+                    b.HasOne("SupportDesk.Domain.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -327,7 +330,7 @@ namespace SupportDesk.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SupportDesk.Api.Models.AppUser", null)
+                    b.HasOne("SupportDesk.Domain.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -336,23 +339,24 @@ namespace SupportDesk.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SupportDesk.Api.Models.AppUser", null)
+                    b.HasOne("SupportDesk.Domain.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SupportDesk.Api.Domain.Entities.Ticket", b =>
+            modelBuilder.Entity("SupportDesk.Domain.Entities.Ticket", b =>
                 {
-                    b.HasOne("SupportDesk.Api.Models.AppUser", "AssignedToUser")
+                    b.HasOne("SupportDesk.Domain.Identity.AppUser", "AssignedToUser")
                         .WithMany()
-                        .HasForeignKey("AssignedToUserId");
+                        .HasForeignKey("AssignedToUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("SupportDesk.Api.Models.AppUser", "CreatedByUser")
+                    b.HasOne("SupportDesk.Domain.Identity.AppUser", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AssignedToUser");
@@ -360,15 +364,15 @@ namespace SupportDesk.Api.Migrations
                     b.Navigation("CreatedByUser");
                 });
 
-            modelBuilder.Entity("SupportDesk.Api.Domain.Entities.TicketReply", b =>
+            modelBuilder.Entity("SupportDesk.Domain.Entities.TicketReply", b =>
                 {
-                    b.HasOne("SupportDesk.Api.Domain.Entities.Ticket", "Ticket")
+                    b.HasOne("SupportDesk.Domain.Entities.Ticket", "Ticket")
                         .WithMany("Replies")
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SupportDesk.Api.Models.AppUser", "User")
+                    b.HasOne("SupportDesk.Domain.Identity.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -379,7 +383,7 @@ namespace SupportDesk.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SupportDesk.Api.Domain.Entities.Ticket", b =>
+            modelBuilder.Entity("SupportDesk.Domain.Entities.Ticket", b =>
                 {
                     b.Navigation("Replies");
                 });

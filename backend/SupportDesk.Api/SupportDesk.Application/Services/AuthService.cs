@@ -45,7 +45,9 @@ namespace SupportDesk.Application.Services
             {
                 Token = token,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpiresInMinutes"]!)),
-                Role = role
+                Role = role,
+                UserName = user.UserName!,
+                UserId = user.Id
             };
         }
 

@@ -14,6 +14,7 @@ namespace SupportDesk.Domain.Entities
 
         // Status & assignment
         public TicketStatus Status { get; set; } = TicketStatus.New;
+        public bool IsPriority { get; set; } = false;
 
         public string? AssignedToUserId { get; set; }
         public AppUser? AssignedToUser { get; set; }

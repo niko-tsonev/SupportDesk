@@ -16,6 +16,15 @@ export default function Navbar() {
 
 
         <nav className="space-x-6 text-sm flex items-center">
+          {(user?.role === "Admin" || user?.role === "Agent") && (
+            <Link 
+              className="bg-green-600 px-4 py-1.5 rounded-lg hover:bg-green-700 transition-colors font-medium" 
+              to="/create-ticket"
+            >
+              Create
+            </Link>
+          )}
+          
           <Link className="hover:text-accent" to="/">Catalog</Link>
 
           {user && (
@@ -33,6 +42,12 @@ export default function Navbar() {
 
           {!user && (
             <Link className="hover:text-accent" to="/login">Login</Link>
+          )}
+          
+          {user && (
+            <span className="ml-4 text-sm text-gray-200">
+              {user.userName}
+            </span>
           )}
         </nav>
       </div>

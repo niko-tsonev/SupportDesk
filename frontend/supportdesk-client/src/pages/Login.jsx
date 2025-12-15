@@ -19,7 +19,7 @@ export default function Login() {
 
     try {
       const result = await loginApi(email, password);
-      login(result.token, result.role);
+      login(result.token, result.role, result.userName, result.userId, result.expiresAt);
       navigate("/");
     } catch (err) {
       setError("Invalid email or password");

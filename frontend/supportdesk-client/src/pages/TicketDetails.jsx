@@ -50,6 +50,19 @@ export default function TicketDetails() {
 
   const isAdmin = user?.role === "Admin";
 
+  // Check if any actions are available for the current user
+  const hasActions = () => {
+    if (isAdmin) return true; // Admins always have delete button
+    if (!user || ticket.status === 2) return false; // No actions if not logged in or ticket closed
+    
+    // Check if any of the action buttons would be shown
+    const canAssign = !ticket.assignedToUserId;
+    const canUnassign = ticket.assignedToUserId === user?.userId;
+    const canClose = ticket.assignedToUserId === user?.userId;
+    
+    return canAssign || canUnassign || canClose;
+  };
+
 
   if (!ticket) return null;
 
@@ -77,7 +90,14 @@ export default function TicketDetails() {
               </span>
             </div>
           </div>
-          <StatusBadge status={ticket.status} />
+          <div className="flex gap-2 flex-shrink-0">
+            {ticket.isPriority && (
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                Priority
+              </span>
+            )}
+            <StatusBadge status={ticket.status} />
+          </div>
         </div>
 
         <div className="border-t pt-4 mt-4">
@@ -93,18 +113,18 @@ export default function TicketDetails() {
           <div className="flex items-center gap-2 text-sm">
             <span className="font-semibold text-gray-700">Assigned to:</span>
             <span className={`px-3 py-1 rounded-full text-sm ${
-              ticket.assignedToUserEmail 
+              ticket.assignedToUserName 
                 ? "bg-blue-100 text-blue-800" 
                 : "bg-gray-100 text-gray-600"
             }`}>
-              {ticket.assignedToUserEmail || "Unassigned"}
+              {ticket.assignedToUserName || "Unassigned"}
             </span>
           </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      {(user && ticket.status !== 2) || isAdmin ? (
+      {hasActions() && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <h3 className="text-sm font-semibold text-gray-700 mb-4">Actions</h3>
           <div className="flex flex-wrap gap-3">
@@ -116,7 +136,7 @@ export default function TicketDetails() {
                       await assignTicket(id);
                       load();
                     }}
-                    className="bg-secondary text-white px-5 py-2.5 rounded-lg hover:bg-accent transition-colors flex items-center gap-2"
+                    className="bg-blue-500 text-white px-5 py-2.5 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -125,13 +145,13 @@ export default function TicketDetails() {
                   </button>
                 )}
 
-                {ticket.assignedToUserId && (
+                {ticket.assignedToUserId && ticket.assignedToUserId === user?.userId && (
                   <button
                     onClick={async () => {
                       await unassignTicket(id);
                       load();
                     }}
-                    className="bg-orange-600 text-white px-5 py-2.5 rounded-lg hover:bg-orange-700 transition-colors flex items-center gap-2"
+                    className="bg-gray-600 text-white px-5 py-2.5 rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -140,18 +160,20 @@ export default function TicketDetails() {
                   </button>
                 )}
 
-                <button
-                  onClick={async () => {
-                    await closeTicket(id);
-                    load();
-                  }}
-                  className="bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Close ticket
-                </button>
+                {(isAdmin || ticket.assignedToUserId === user?.userId) && (
+                  <button
+                    onClick={async () => {
+                      await closeTicket(id);
+                      load();
+                    }}
+                    className="bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Close ticket
+                  </button>
+                )}
               </>
             )}
 
@@ -168,7 +190,7 @@ export default function TicketDetails() {
             )}
           </div>
         </div>
-      ) : null}
+      )}
 
       {/* Back Link */}
       <div className="mb-6">

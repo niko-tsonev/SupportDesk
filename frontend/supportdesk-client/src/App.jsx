@@ -7,6 +7,7 @@ import TicketDetails from "./pages/TicketDetails";
 import TicketReply from "./pages/TicketReply";
 import Dashboard from "./pages/Dashboard";
 import History from "./pages/History";
+import CreateTicket from "./pages/CreateTicket";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -34,6 +35,15 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <History />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/create-ticket"
+            element={
+              <ProtectedRoute>
+                <CreateTicket />
               </ProtectedRoute>
             }
           />
