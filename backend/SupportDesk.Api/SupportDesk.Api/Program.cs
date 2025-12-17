@@ -82,7 +82,10 @@ builder.Services.AddCors(options =>
         policy
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins(
+                "http://localhost:5173", // Development
+                "https://mysupportdesk.ddns.net" // Production - replace with your No-IP domain
+            )
             .AllowCredentials();
     });
 });
