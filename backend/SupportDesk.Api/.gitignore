@@ -65,6 +65,7 @@ publish/
 secrets.json
 appsettings.Development.json
 appsettings.Local.json
+appsettings.Production.json
 
 # ASP.NET scaffolding
 ScaffoldingReadMe.txt
