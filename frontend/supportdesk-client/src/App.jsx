@@ -1,6 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import ProtectedRoute from "./auth/ProtectedRoute";
+import PrivateRoute from "./components/PrivateRoute";
+import PublicRoute from "./components/PublicRoute";
 
 import Catalog from "./pages/Catalog";
 import TicketDetails from "./pages/TicketDetails";
@@ -17,39 +18,73 @@ export default function App() {
       <Navbar />
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
         <Routes>
-          <Route path="/" element={<Catalog />} />
-          <Route path="/tickets/:id" element={<TicketDetails />} />
-          <Route path="/tickets/:id/reply" element={<TicketReply />} />
+          {/* Public routes - only accessible when NOT logged in */}
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+
+          {/* Private routes - only accessible when logged in */}
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Catalog />
+              </PrivateRoute>
+            }
+          />
+          
+          <Route
+            path="/tickets/:id"
+            element={
+              <PrivateRoute>
+                <TicketDetails />
+              </PrivateRoute>
+            }
+          />
+          
+          <Route
+            path="/tickets/:id/reply"
+            element={
+              <PrivateRoute>
+                <TicketReply />
+              </PrivateRoute>
+            }
+          />
 
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <PrivateRoute>
                 <Dashboard />
-              </ProtectedRoute>
+              </PrivateRoute>
             }
           />
 
           <Route
             path="/history"
             element={
-              <ProtectedRoute>
+              <PrivateRoute>
                 <History />
-              </ProtectedRoute>
+              </PrivateRoute>
             }
           />
 
           <Route
             path="/create-ticket"
             element={
-              <ProtectedRoute>
+              <PrivateRoute>
                 <CreateTicket />
-              </ProtectedRoute>
+              </PrivateRoute>
             }
           />
 
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
+          {/* Catch all - redirect to login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
     </div>

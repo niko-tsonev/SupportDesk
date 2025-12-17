@@ -7,7 +7,18 @@ export default function History() {
   const [tickets, setTickets] = useState([]);
 
   useEffect(() => {
-    getClosedTickets().then(setTickets);
+    let isMounted = true;
+
+    getClosedTickets().then((data) => {
+      if (isMounted) {
+        setTickets(data);
+      }
+    });
+
+    // Cleanup function - runs on component unmount
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (

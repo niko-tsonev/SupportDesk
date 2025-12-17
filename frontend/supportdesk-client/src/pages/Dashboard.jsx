@@ -6,7 +6,18 @@ export default function Dashboard() {
   const [tickets, setTickets] = useState([]);
 
   useEffect(() => {
-    getAssignedTickets().then(setTickets);
+    let isMounted = true;
+
+    getAssignedTickets().then((data) => {
+      if (isMounted) {
+        setTickets(data);
+      }
+    });
+
+    // Cleanup function - runs on component unmount
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (

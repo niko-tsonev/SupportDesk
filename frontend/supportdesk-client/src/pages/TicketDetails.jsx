@@ -26,8 +26,21 @@ export default function TicketDetails() {
   };
 
   useEffect(() => {
-    load();
-    loadReplies();
+    let isMounted = true;
+
+    const fetchData = async () => {
+      if (isMounted) {
+        await load();
+        await loadReplies();
+      }
+    };
+
+    fetchData();
+
+    // Cleanup function - runs on component unmount or when id changes
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   const handleReplySubmit = async (payload) => {

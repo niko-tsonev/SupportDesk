@@ -9,7 +9,18 @@ export default function Catalog() {
   const itemsPerPage = 5;
 
   useEffect(() => {
-    getTickets().then(setTickets);
+    let isMounted = true;
+
+    getTickets().then((data) => {
+      if (isMounted) {
+        setTickets(data);
+      }
+    });
+
+    // Cleanup function - runs on component unmount
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const sortTickets = (ticketList) => {
