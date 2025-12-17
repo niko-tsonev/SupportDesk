@@ -28,33 +28,15 @@ export default function App() {
             }
           />
 
+          {/* Public catalog - accessible to everyone */}
+          <Route path="/" element={<Catalog />} />
+          
+          {/* Ticket details - public read-only access */}
+          <Route path="/tickets/:id" element={<TicketDetails />} />
+          
+          <Route path="/tickets/:id/reply" element={<TicketReply />} />
+          
           {/* Private routes - only accessible when logged in */}
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Catalog />
-              </PrivateRoute>
-            }
-          />
-          
-          <Route
-            path="/tickets/:id"
-            element={
-              <PrivateRoute>
-                <TicketDetails />
-              </PrivateRoute>
-            }
-          />
-          
-          <Route
-            path="/tickets/:id/reply"
-            element={
-              <PrivateRoute>
-                <TicketReply />
-              </PrivateRoute>
-            }
-          />
 
           <Route
             path="/dashboard"
