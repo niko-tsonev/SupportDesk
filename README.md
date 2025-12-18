@@ -2,6 +2,14 @@
 
 A full-stack support ticket management system built with ASP.NET Core and React. Enables customers to create tickets, agents to manage and respond to tickets, and administrators to oversee the entire support workflow with role-based access control, priority management, and automated email notifications.
 
+### User info
+
+user: admin@supportdesk.local
+pass: Admin123!
+
+user: agent1@supportdesk.local
+pass: Agent123!
+
 ## Technologies
 
 ### Backend
