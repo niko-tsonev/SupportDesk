@@ -4,6 +4,8 @@ A full-stack support ticket management system built with ASP.NET Core and React.
 
 ### User info
 
+https://supportdesk.ddns.net/
+
 user: admin@supportdesk.local
 pass: Admin123!
 
